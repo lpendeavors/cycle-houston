@@ -75,13 +75,13 @@ angular.module('starter.controllers', [])
   $scope.tripHistory = Trip.getAll();
 })
 
-.controller('DetailsCtrl', function($scope, $stateParams, Trip) {
-  var history = Trip.getAll();
+.controller('DetailsCtrl', function($scope, $stateParams, $interval, Trip) {
+  var history = Trip.getAll(), lastIndex;
   history.forEach(function(h) {
     if(h._id === $stateParams.id) {
       $scope.trip = h;
       
-      var lastIndex = h.points.length - 1;
+      lastIndex = h.points.length - 1;
       $scope.endMarker = {
         draggable: false,
         lat: h.points[lastIndex].lat,
@@ -90,6 +90,23 @@ angular.module('starter.controllers', [])
     }
   });
   
+  $scope.trip.points = [
+    { lat: 29.741989, lng: -95.3695423 },
+    { lat: 29.7420358, lng: -95.3695015 },
+    { lat: 29.7420166, lng: -95.36953 },
+    { lat: 29.7420076, lng: -95.3695487 },
+    { lat: 29.7420115, lng: -95.3695668 },
+    { lat: 29.7420163, lng: -95.3695798 },
+    { lat: 29.7420196, lng: -95.3695877 },
+    { lat: 29.7420157, lng: -95.3695852 },
+    { lat: 29.7420173, lng: -95.369591 },
+    { lat: 29.7420184, lng: -95.3695939 },
+    { lat: 29.7420185, lng: -95.3695945 },
+    { lat: 29.742019, lng: -95.369594 },
+    { lat: 29.7420266, lng: -95.3695901 },
+    { lat: 29.7420265, lng: -95.3695903 },
+  ];
+  
   angular.extend($scope, {
     detailCenter: {
       lat: $scope.trip.points[0].lat,
@@ -97,11 +114,7 @@ angular.module('starter.controllers', [])
       zoom: 13
     },
     detailMarkers: {
-      start: {
-        draggable: false,
-        lat: $scope.trip.points[0].lat,
-        lng: $scope.trip.points[0].lng
-      },
+      start: $scope.startMarker,
       end: $scope.endMarker
     },
     detailPaths: {
@@ -109,6 +122,11 @@ angular.module('starter.controllers', [])
         color: '#FF0000',
         weight: 8,
         latlngs: $scope.trip.points
+      },
+      replay: {
+        color: '#0000FF',
+        weight: 8,
+        latlngs: []
       }
     },
     tiles: {
@@ -123,15 +141,32 @@ angular.module('starter.controllers', [])
     }
   });
   
-  var tripPoints = $scope.trip.points;
+  var intervalId;
   $scope.playRide = function() {
     $scope.isPlaying = true;
-    $scope.detailPaths.trip.points = [];
+    $scope.startMarker = {
+      lat: $scope.trip.points[0].lat,
+      lng: $scope.trip.points[0].lng
+    };
+    $scope.detailPaths.trip.latlngs = [];
     
-    tripPoints.forEach(function(tp) {
-      $scope.detailPaths.trip.points.push(tp);
-    });
-    $scope.isPlaying = false;
+    var i = 0, l = $scope.trip.points.length;
+    intervalId = $interval(function() {
+      if(i < l) {
+        $scope.detailPaths.replay.latlngs.push($scope.trip.points[i]);
+        i++;
+      } else {
+        $interval.cancel(intervalId);
+        $scope.isPlaying = false;
+        $scope.detailPaths.replay.latlngs = [];
+        $scope.detailPaths.trip.latlngs = $scope.trip.points;
+        $scope.endMarker = {
+          draggable: false,
+          lat: $scope.trip.points[lastIndex].lat,
+          lng: $scope.trip.points[lastIndex].lng
+        };
+      }
+    }, 50);
   };
 })
 
@@ -144,6 +179,10 @@ angular.module('starter.controllers', [])
       lng: location.coords.longitude,
       zoom: 13
     };
+    $scope.markers.currentPos = {
+      lat: location.coords.latitude,
+      lng: location.coords.longitude,
+    };
   });
   }
 
@@ -151,15 +190,19 @@ angular.module('starter.controllers', [])
     $scope.tripType = tripType;
   };
   
+  var markerIcons = {
+    startIcon: {
+      iconUrl: 'img/start-marker.svg'
+    },
+    endIcon: {
+      iconUrl: 'img/end-marker.png'
+    }
+  };
+  
   angular.extend($scope, {
     mapCenter: {},
     markers: {
-      start: { 
-        draggable: false,
-        lat: '',
-        lng: ''
-      },
-      end: { 
+      currentPos: {
         draggable: false,
         lat: '',
         lng: ''
@@ -195,9 +238,7 @@ angular.module('starter.controllers', [])
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        if(!lastPoint.lat && !lastPoint.lng) {
-          $scope.markers.start = point;
-        }
+        
         if (point.lat === lastPoint.lat && point.lng === lastPoint.lng) {
           // Do not update point
           return;
@@ -207,6 +248,7 @@ angular.module('starter.controllers', [])
               lat: position.coords.latitude,
               lng: position.coords.longitude
             });
+            $scope.markers.currentPos = point;
           });
           
           var distance = 0;
@@ -286,9 +328,6 @@ angular.module('starter.controllers', [])
     
     confirmEnd.then(function(res) {
       if (res) {
-        $scope.markers.end.lat = $scope.paths.trip.latlngs[$scope.paths.trip.latlngs.length-1].lat;
-        $scope.markers.end.lng = $scope.paths.trip.latlngs[$scope.paths.trip.latlngs.length-1].lng;
-        
         $window.navigator.geolocation.clearWatch(watchId);
         $interval.cancel(intervalId);
         $scope.started = false;
@@ -333,9 +372,11 @@ angular.module('starter.controllers', [])
     $scope.paths.trip.latlngs = [];
     $scope.tripTimer = 0;
     $scope.totalDistance = 0;
+    $scope.avgSpeed = undefined;
+    $scope.curSpeed = undefined;
     
     tripObj = {};
-    getStart();
+    getCenter();
   }
   
   $scope.avgSpeed = undefined;

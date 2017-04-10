@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-var ProfileSchema = new mongoose.Schema({
+let ProfileSchema = new mongoose.Schema({
     age: {
         type: Number
     },

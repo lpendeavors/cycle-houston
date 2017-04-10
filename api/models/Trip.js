@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-var TripSchema = new mongoose.Schema({
+let TripSchema = new mongoose.Schema({
     startTime: {
         type: Date,
         required: 'A start time is required'
