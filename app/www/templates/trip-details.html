@@ -1,0 +1,49 @@
+<ion-view view-title="Ride">
+  <ion-content>
+      <div class="list card">
+        <div class="item item-image">
+          <leaflet id="tripDetailMap" lf-center="detailCenter" tiles="tiles" paths="detailPaths" markers="detailMarkers"></leaflet>
+        </div>
+        <div class="item">
+          <h1 class="text-center">Ride Details</h1>
+          <div class="row">
+            <div class="col">
+              <p class="text-right"><strong>Duration:</strong></p>
+            </div>
+            <div class="col">
+              <p>{{ trip.duration | secondsToDateTime | date:'HH:mm:ss' }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-right"><strong>Distance:</strong></p>
+            </div>
+            <div class="col">
+              <p>{{ trip.distance | number:2 }} miles</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-right"><strong>Avg. Speed:</strong></p>
+            </div>
+            <div class="col">
+              <p>{{ trip.speed || 0 | number:2 }} mph</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <p class="text-right"><strong>Time:</strong></p>
+            </div>
+            <div class="col">
+              <p>{{ trip.startTime | date:'shortTime' }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <button class="button button-calm button-full" ng-click="playRide()" ng-hide="isPlaying">Replay Trip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </ion-content>
+</ion-view>

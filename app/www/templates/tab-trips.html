@@ -1,0 +1,23 @@
+<ion-view view-title="Previous Rides">
+  <ion-content class="padding">
+    <a class="button button-full button-royal" ng-hide="hasProfile" href="#/tab/profile">Submit Profile</a>
+    <a class="button button-full button-positive" ng-show="started" href="#/tab/record">Trip In Progress</a>
+    <div class="card">
+      <div class="item item-text-wrap text-center">
+        <h1>{{ weather.name }}</h1>
+        <img class="weather-img" ng-src="http://openweathermap.org/img/w/{{weather.weather[0].icon}}.png" />
+        <small><em>{{ weather.weather[0].main }}</em></small>
+        <h1 class="temp balanced text-center">{{ weather.main.temp | number:0 }}&deg; F</h1>
+      </div>
+    </div>
+    <div class="list card" ng-show="tripHistory">
+      <ion-item class="item-icon-right" type="item-text-wrap" ng-repeat="trip in tripHistory | orderBy: '-startTime'" href="#/tab/details/{{trip._id}}">
+        <h2>{{ trip.startTime | date:'EEEE' }} <span>({{ trip.type }})</span></h2>
+        <small>{{ trip.startTime | date }}</small>
+        <span class="item-note">{{ trip.distance | number:2 }} miles</span>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </div>
+    <h3 class="text-center" ng-hide="tripHistory"><i>No ride history</i></h3>
+  </ion-content>
+</ion-view>

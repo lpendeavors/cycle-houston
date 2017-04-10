@@ -1,0 +1,52 @@
+<ion-view view-title="Record Ride">
+  <ion-content>
+    <div class="list card">
+      <div class="item item-image">
+        <leaflet id="recordMap" lf-center="mapCenter" tiles="tiles" markers="markers" paths="paths"></leaflet>
+      </div>
+      <div class="item">
+        <h1 class="text-center">Ride Details</h1>
+        <div class="row">
+          <div class="col">
+            <p class="text-right"><strong>Duration:</strong></p>
+          </div>
+          <div class="col">
+            <p>{{ tripTimer | secondsToDateTime | date:'HH:mm:ss' }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="text-right"><strong>Distance:</strong></p>
+          </div>
+          <div class="col">
+            <p>{{ totalDistance | number:2 }} miles</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="text-right"><strong>Cur. Speed:</strong></p>
+          </div>
+          <div class="col">
+            <p ng-show="curSpeed">{{ curSpeed | number:2 }} mph</p>
+            <p ng-hide="curSpeed">Calculating...</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p class="text-right"><strong>Avg. Speed:</strong></p>
+          </div>
+          <div class="col">
+            <p ng-show="avgSpeed">{{ avgSpeed | number:2 }} mph</p>
+            <p ng-hide="avgSpeed">Calculating...</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="button button-assertive button-full" ng-click="endTrip()" ng-show="started">End Trip</button>
+            <button class="button button-calm button-full" ng-click="beginTrip()" ng-hide="started">Start Trip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

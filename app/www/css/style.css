@@ -1,0 +1,23 @@
+/* Empty. Add your own CSS if you like */
+i, em {
+    font-style: italic;
+}
+
+.weather-img {
+    height: 75px;
+    display: block;
+    margin: auto;
+}
+
+.temp {
+    padding-top: 15px;
+}
+
+#recordMap,
+#tripDetailMap {
+    height: 35vh;
+}
+
+input {
+    text-align: right;
+}
