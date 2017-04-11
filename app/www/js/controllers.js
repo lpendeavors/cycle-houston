@@ -76,7 +76,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('DetailsCtrl', function($scope, $stateParams, $interval, Trip) {
-  var history = Trip.getAll(), lastIndex;
+  var history = Trip.getAll(), lastIndex, intervalId;
+  
   history.forEach(function(h) {
     if(h._id === $stateParams.id) {
       $scope.trip = h;
@@ -90,28 +91,11 @@ angular.module('starter.controllers', [])
     }
   });
   
-  $scope.trip.points = [
-    { lat: 29.741989, lng: -95.3695423 },
-    { lat: 29.7420358, lng: -95.3695015 },
-    { lat: 29.7420166, lng: -95.36953 },
-    { lat: 29.7420076, lng: -95.3695487 },
-    { lat: 29.7420115, lng: -95.3695668 },
-    { lat: 29.7420163, lng: -95.3695798 },
-    { lat: 29.7420196, lng: -95.3695877 },
-    { lat: 29.7420157, lng: -95.3695852 },
-    { lat: 29.7420173, lng: -95.369591 },
-    { lat: 29.7420184, lng: -95.3695939 },
-    { lat: 29.7420185, lng: -95.3695945 },
-    { lat: 29.742019, lng: -95.369594 },
-    { lat: 29.7420266, lng: -95.3695901 },
-    { lat: 29.7420265, lng: -95.3695903 },
-  ];
-  
   angular.extend($scope, {
     detailCenter: {
       lat: $scope.trip.points[0].lat,
       lng: $scope.trip.points[0].lng,
-      zoom: 13
+      zoom: 12
     },
     detailMarkers: {
       start: $scope.startMarker,
@@ -134,14 +118,13 @@ angular.module('starter.controllers', [])
       options: {
         attribution: 'Tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         subdomains: 'abcd',
-        minZoom: 0,
+        minZoom: 9,
         maxZoom: 18,
         ext: 'png'
       }
     }
   });
   
-  var intervalId;
   $scope.playRide = function() {
     $scope.isPlaying = true;
     $scope.startMarker = {
@@ -177,7 +160,7 @@ angular.module('starter.controllers', [])
     $scope.mapCenter = {
       lat: location.coords.latitude,
       lng: location.coords.longitude,
-      zoom: 13
+      zoom: 12
     };
     $scope.markers.currentPos = {
       lat: location.coords.latitude,
@@ -188,15 +171,6 @@ angular.module('starter.controllers', [])
 
   $scope.setTripType = function(tripType){
     $scope.tripType = tripType;
-  };
-  
-  var markerIcons = {
-    startIcon: {
-      iconUrl: 'img/start-marker.svg'
-    },
-    endIcon: {
-      iconUrl: 'img/end-marker.png'
-    }
   };
   
   angular.extend($scope, {
@@ -220,7 +194,7 @@ angular.module('starter.controllers', [])
       options: {
         attribution: 'Tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         subdomains: 'abcd',
-        minZoom: 0,
+        minZoom: 9,
         maxZoom: 18,
         ext: 'png'
       }
@@ -291,7 +265,7 @@ angular.module('starter.controllers', [])
     $ionicPopup.show({
       template: `<ion-radio ng-model="tripType" ng-value="'Work'" ng-click="setTripType('work')">Work</ion-radio>
                 <ion-radio ng-model="tripType" ng-value="'School'" ng-click="setTripType('school')">School</ion-radio>
-                <ion-radio ng-model="tripType" ng-value="'Errand'" ng-click="setTripType('errands')">Errand</ion-radio>
+                <ion-radio ng-model="tripType" ng-value="'Errand'" ng-click="setTripType('errand')">Errand</ion-radio>
                 <ion-radio ng-model="tripType" ng-value="'Leisure'" ng-click="setTripType('leisure')">Leisure</ion-radio>
                 <ion-radio ng-model="tripType" ng-value="'Other'" ng-click="setTripType('other')">Other</ion-radio>`,
       title: 'What type of trip?',
@@ -326,8 +300,8 @@ angular.module('starter.controllers', [])
       template: 'Are you sure?'
     });
     
-    confirmEnd.then(function(res) {
-      if (res) {
+    confirmEnd.then(function(response) {
+      if (response) {
         $window.navigator.geolocation.clearWatch(watchId);
         $interval.cancel(intervalId);
         $scope.started = false;
@@ -338,6 +312,7 @@ angular.module('starter.controllers', [])
         tripObj.points = $scope.paths.trip.latlngs;
         tripObj.duration = $scope.tripTimer;
         tripObj.distance = $scope.totalDistance;
+        tripObj.avgSpeed = $scope.avgSpeed;
         
         // Check for profile
         if (Profile.get()) {
@@ -347,7 +322,6 @@ angular.module('starter.controllers', [])
         Trip.save(tripObj)
         .success(function(data) {
           tripObj._id = data._id;
-          tripObj.avgSpeed = $scope.avgSpeed;
           Trip.saveLocal(tripObj);
           
           $ionicPopup.alert({
@@ -414,7 +388,7 @@ angular.module('starter.controllers', [])
     dist = dist * 180/Math.PI;
     dist = dist * 60 * 1.1515;
     return dist;
-  }
+  };
 })
 
 .controller('ProfileCtrl', function($scope, $window, Profile) {

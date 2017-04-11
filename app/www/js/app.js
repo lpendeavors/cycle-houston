@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'nemLogging', 'ui-leaflet'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.filters', 'starter.services', 'nemLogging', 'ui-leaflet'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -14,15 +14,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
+      
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    
+    alert(JSON.stringify(window.plugins.backgroundLocationServices));
+    alert(JSON.stringify(cordova.plugins.BackgroundMode));
   });
 })
-
 .config(function($stateProvider, $urlRouterProvider) {
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -81,10 +83,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/trips');
-})
-
-.filter('secondsToDateTime', [function() {
-  return function(seconds) {
-    return new Date(1970, 0, 1).setSeconds(seconds);
-  };
-}]);
+});
