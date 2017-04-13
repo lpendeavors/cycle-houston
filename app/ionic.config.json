@@ -1,4 +1,6 @@
 {
   "name": "cycle-houston",
-  "app_id": "9b9d4ece"
+  "app_id": "",
+  "v2": true,
+  "typescript": true
 }
