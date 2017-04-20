@@ -1,0 +1,13 @@
+<!-- Generated template for the HomeWeather component -->
+<div *ngIf="weather">
+    <ion-card>
+        <ion-card-header>
+            <h1 text-center>{{weather.name}}</h1>
+        </ion-card-header>
+        <ion-card-content>
+            <h2 text-center class="temp">{{weather.main.temp | number : '1.0-0'}}&deg; F</h2>
+            <img class="weather-img" src='https://openweathermap.org/img/w/{{weather.weather[0].icon}}.png' />
+            <p text-center><em>{{weather.weather[0].main}}</em></p>
+        </ion-card-content>
+    </ion-card>
+</div>

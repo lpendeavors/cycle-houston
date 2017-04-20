@@ -1,0 +1,47 @@
+<!--
+  Generated template for the Ride page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title text-center>New Ride</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-card>
+    <ride-map></ride-map>
+    <ion-card-title>
+      <h1 text-center><strong>Ride Details</strong></h1>
+      <ion-grid>
+        <ion-row>
+          <ion-col><p text-right><strong>Duration:</strong></p></ion-col>
+          <ion-col><p>{{rideProvider.ticks}}</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Distance:</strong></p></ion-col>
+          <ion-col><p>{{rideProvider.ride.distance | number:'1.2-2'}} miles</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Cur. Speed:</strong></p></ion-col>
+          <ion-col><p>{{rideProvider.currentSpeed | number:'1.2-2'}} mph</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Avg. Speed:</strong></p></ion-col>
+          <ion-col><p>{{rideProvider.ride.avgSpeed | number:'1.2-2'}} mph</p></ion-col>
+        </ion-row>
+        <ion-row *ngIf="!rideProvider.inProgress">
+          <ion-col><button ion-button block color="primary" (click)="start()">Begin Ride</button></ion-col>
+        </ion-row>
+        <ion-row *ngIf="rideProvider.inProgress">
+          <ion-col><button ion-button block color="danger" (click)="stop()">End Ride</button></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-title>
+  </ion-card>
+</ion-content>

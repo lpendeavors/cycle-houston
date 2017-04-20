@@ -1,0 +1,44 @@
+<!-- Generated template for the TripDetails component -->
+<ion-header>
+  
+    <ion-toolbar>
+        <ion-title>Ride Details</ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="dismissModal()">
+                <!--<span ion-text color="primary" showWhen="ios">Cancel</span>-->
+                <ion-icon name="md-close"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+    
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ride-map></ride-map>
+    <ion-card-title>
+      <h1 text-center><strong>Ride Details</strong></h1>
+      <ion-grid>
+        <ion-row>
+          <ion-col><p text-right><strong>Duration:</strong></p></ion-col>
+          <ion-col><p>0:00:00</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Distance:</strong></p></ion-col>
+          <ion-col><p>0.00 miles</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Avg. Speed:</strong></p></ion-col>
+          <ion-col><p>0 mph</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><p text-right><strong>Ride Time</strong></p></ion-col>
+          <ion-col><p>2:33 pm</p></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><button ion-button block color="light">Replay Ride</button></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-title>
+  </ion-card>
+</ion-content>
