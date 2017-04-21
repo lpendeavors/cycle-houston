@@ -1,7 +1,7 @@
 <!-- Generated template for the TripList component -->
 <ion-card>
     <ion-list>
-        <button *ngFor="let ride of rideProvider.rideHistory" ion-item (click)="presentDetailModal()">
+        <button *ngFor="let ride of rideProvider.rideHistory" ion-item (click)="presentDetailModal(ride)">
             <h2>{{ride.startTime | date:'EEEE'}} ({{ride.type}})</h2>
             <p>{{ride.startTime | date:'mediumDate'}}</p>
             <ion-note>

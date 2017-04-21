@@ -9,6 +9,7 @@ import { TabsModule } from '../pages/tabs/tabs.module';
 import { HomeModule } from '../pages/home/home.module';
 import { RideModule } from '../pages/ride/ride.module';
 import { ProfileModule } from '../pages/profile/profile.module';
+import { PipesModule } from '../pipes/pipes.module';
 
 import { ProfileProvider } from '../providers/profile-provider';
 import { WeatherProvider } from '../providers/weather-provider';
@@ -31,7 +32,8 @@ import { Geolocation } from '@ionic-native/geolocation';
     TabsModule,
     HomeModule,
     RideModule,
-    ProfileModule
+    ProfileModule,
+    PipesModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { ViewController } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ViewController, NavParams } from 'ionic-angular';
+import { RideMap } from '../ride-map/ride-map';
 
 import { RideModel } from '../../models/ride-model';
 
@@ -13,16 +14,30 @@ import { RideModel } from '../../models/ride-model';
   selector: 'ride-details',
   templateUrl: 'ride-details.html'
 })
-export class RideDetails {
+export class RideDetails implements OnInit {
+  
+  @ViewChild(RideMap)
+  private rideMap: RideMap;
 
-  ride: RideModel;
+  public ride: RideModel;
 
   constructor(
+    public params: NavParams,
     public viewCtrl: ViewController
   ) {}
   
-  dismissModal() {
+  dismissModal(): void {
+    // Close rideDetail modal
     this.viewCtrl.dismiss();
+  }
+  
+  replayRide(): void {
+    // Call replay method on rideMap
+    this.rideMap.startReplay();
+  }
+  
+  ngOnInit(): void {
+    this.ride = this.params.get('ride');
   }
 
 }

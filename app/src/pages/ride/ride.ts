@@ -47,9 +47,12 @@ export class Ride {
     list.addButton({
       text: 'Begin',
       handler: data => {
-        // Set ride type and begin
-        this.rideProvider.ride.type = data;
-        this.rideProvider.startRide();
+        // Ensure type selection
+        if (data) {
+          // Set ride type and begin
+          this.rideProvider.ride.type = data;
+          this.rideProvider.startRide();
+        }
       }
     });
     // Show list

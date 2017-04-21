@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController} from 'ionic-angular';
+import { ModalController } from 'ionic-angular';
 import { RideDetails } from '../ride-details/ride-details';
 import { RideProvider } from '../../providers/ride-provider';
 
@@ -20,8 +20,8 @@ export class RideList {
     public rideProvider: RideProvider
   ) {}
   
-  presentDetailModal() {
-    let detailModal = this.modalCtrl.create(RideDetails);
+  presentDetailModal(rideData) {
+    let detailModal = this.modalCtrl.create(RideDetails, { ride: rideData });
     detailModal.present();
   }
 

@@ -39,16 +39,26 @@ export class LocationProvider {
     // Background Tracking
     let config = {
       desiredAccuracy: 0,
-      stationaryRadius: 20,
-      distanceFilter: 10,
+      stationaryRadius: 1,
+      distanceFilter: 1,
       debug: true,
-      interval: 2000
+      
+      // Android
+      interval: 2000,
+      locationProvider: 0,
+      fastestInterval: 200,
+      stopOnStillActivity: false,
+      
+      // IOS
+      activityType: 'Fitness',
+      pauseLocationUpdates: false
     };
     
     this.backgroundGeolocation.configure(config).subscribe((location) => {
       this.zone.run(() => {
         this.locationUpdate.next(location);
-      })
+      });
+      this.backgroundGeolocation.finish();
     }, (err) => {
       console.log(err);
     });
@@ -58,7 +68,7 @@ export class LocationProvider {
     
     // Foreground tracking
     let options = {
-      frequency: 3000,
+      frequency: 2000,
       enableHighAccuracy: true
     };
     

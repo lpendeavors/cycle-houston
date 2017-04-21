@@ -5,7 +5,7 @@ import { RideMapModule } from '../ride-map/ride-map.module';
 
 @NgModule({
   declarations: [
-    RideDetails,
+    RideDetails
   ],
   imports: [
     IonicModule.forRoot(RideDetails),

@@ -1,7 +1,9 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, Input } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LocationProvider } from '../../providers/location-provider';
 import { RideProvider } from '../../providers/ride-provider';
+import { RideModel } from '../../models/ride-model';
+import { Observable } from 'rxjs/Rx';
 
 import 'leaflet';
 
@@ -17,12 +19,16 @@ import 'leaflet';
 })
 export class RideMap implements OnInit {
   
+  // From the rideDetail component (optional)
+  @Input() existingRide?: RideModel;
+  
   private markerLayer: any;
   private marker: any;
   private pathLayer: any;
   private path: any;
-  public map: any;
-  public mapId: string;
+  private map: any;
+  private mapId: string;
+  private isPlaying: boolean;
   
   constructor(
     public zone: NgZone,
@@ -32,16 +38,13 @@ export class RideMap implements OnInit {
   ) {}
   
   loadMap(): void {
-    // Generate map id to prevent dubplicate id error
+    // Generate map id to prevent dubplicate map container error
     let id = Math.random();
     this.mapId = `map-${id}`;
-    
     // Find current location
     this.locationProvider.getPosition().then(pos => {
       // Initialize map
       this.map = new L.Map(this.mapId);
-      // Set center
-      this.map.setView(new L.LatLng(pos.coords.latitude, pos.coords.longitude), 12);
       // Add tile layer to map
       new L.TileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
         attribution: 'Tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -51,14 +54,66 @@ export class RideMap implements OnInit {
       // Create layer groups for marker and path
       this.markerLayer = new L.LayerGroup([]).addTo(this.map);
       this.pathLayer = new L.LayerGroup([]).addTo(this.map);
-      
+      // Add polyline to pathLayer
       this.setPath();
+      // Check for existingRide
+      if (this.existingRide) {
+        // Fit map bounds to ride path
+        this.map.fitBounds(new L.LatLngBounds(this.existingRide.points));
+        // Set path array to ride coordinates
+        this.path.setLatLngs(this.existingRide.points);
+        // Set markers
+        const startMarker = new L.Marker([this.existingRide.points[0].lat, this.existingRide.points[0].lng]);
+        const endMarker = new L.Marker([this.existingRide.points[this.existingRide.points.length-1].lat, this.existingRide.points[this.existingRide.points.length-1].lng]);
+        startMarker.addTo(this.markerLayer);
+        endMarker.addTo(this.markerLayer);
+      } else {
+        // Set center and zoom to current location
+        this.map.setView(new L.LatLng(pos.coords.latitude, pos.coords.longitude), 12);
+      }
     });
   }
   
   setPath(): void {
-    // Create path line
+    // Create new polyline for ride path
     this.path = new L.Polyline([], { color: 'red', weight: 5 }).addTo(this.pathLayer);
+  }
+  
+  clearLayers(): void {
+    // Clear marker and path layer contents
+    this.pathLayer.clearLayers();
+    this.markerLayer.clearLayers();
+  }
+  
+  clearPath(): void {
+    // Add fresh path layer
+    this.setPath();
+  }
+  
+  startReplay(): void {
+    // Update playing indicator
+    this.isPlaying = true;
+    this.zone.run(() => {
+      // Reset path
+      this.pathLayer.clearLayers();
+      this.setPath();
+    });
+    // Create timer for auto incrementing
+    let counter = Observable.timer(0, 50);
+    // Create timer subscription
+    let subscription = counter.subscribe(t => {
+      this.zone.run(() => {
+        // Push ride coordinates to path
+        this.path.addLatLng(new L.LatLng(this.existingRide.points[t].lat, this.existingRide.points[t].lng));
+      });
+      // Check if end of array
+      if (t === this.existingRide.points.length-1) {
+        // End timer to stop incrementing
+        subscription.unsubscribe();
+        // Update playing indicator
+        this.isPlaying = false;
+      }
+    });
   }
   
   ngOnInit(): void {
@@ -82,14 +137,11 @@ export class RideMap implements OnInit {
     // Subscribe to rideEnd event
     this.rideProvider.rideEnded.subscribe(() => {
       this.zone.run(() => {
-        // Clear marker and path layer contents
-        this.pathLayer.clearLayers();
-        this.markerLayer.clearLayers();
-        
-        // Add fresh path layer
-        this.setPath();
+        // Reset map
+        this.clearLayers();
+        this.clearPath();
       });
-    })
+    });
   }
   
 }

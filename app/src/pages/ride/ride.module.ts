@@ -7,7 +7,7 @@ import { RideProvider } from '../../providers/ride-provider';
 
 @NgModule({
   declarations: [
-    Ride,
+    Ride
   ],
   imports: [
     IonicPageModule.forChild(Ride),
