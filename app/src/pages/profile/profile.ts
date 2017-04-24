@@ -29,7 +29,7 @@ export class Profile implements OnInit {
     if (Object.keys(this.profile).length == 0) {
       return; // No profile to save
     } else {
-      this.profileProvider.saveLocal(this.profile)
+      this.profileProvider.save(this.profile)
       .then(response => this.confirmSave());
     }
   }

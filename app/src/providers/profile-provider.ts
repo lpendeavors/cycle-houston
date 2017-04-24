@@ -14,18 +14,24 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ProfileProvider {
   
-  private apiUrl = 'localhost:3000/api/profiles/';
+  private apiUrl = 'http://cycle-hou.larryeparks.com/api/profiles/';
 
   constructor(
     public http: Http, 
     public storage: Storage
   ) {}
   
-  save(profile: any): Promise<ProfileModel> {
+  save(profile: any) {
+    console.log(this.apiUrl);
     return this.http
                 .post(this.apiUrl, profile)
                 .toPromise()
-                .then(res => res.json() as ProfileModel)
+                .then((response) => {
+                  response.json().data as ProfileModel;
+                  // Save locally
+                  let prof = response.json().data;
+                  this.saveLocal(prof);
+                })
                 .catch(this.handleError);
   }
   
@@ -35,15 +41,15 @@ export class ProfileProvider {
         this.storage.set('profile', profile);
         return resolve(profile as ProfileModel);
       });
-    })
+    });
   }
   
   getProfile(): Promise<ProfileModel> {
     return new Promise((resolve, reject) => {
       this.storage.get('profile').then(profile => {
         return resolve(profile as ProfileModel);
-      })
-    })
+      });
+    });
   }
   
   private handleError(error: any): Promise<any> {

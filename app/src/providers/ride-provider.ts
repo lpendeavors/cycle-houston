@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/toPromise';
 
 import { LocationProvider } from '../providers/location-provider';
 import { RideModel } from '../models/ride-model';
@@ -31,6 +32,8 @@ export class RideProvider {
   private lastCoord: any = {};
   private subscription: any;
   
+  private apiUrl = 'http://cycle-hou.larryeparks.com/api/trips';
+  
   constructor(
     public http: Http,
     public zone: NgZone,
@@ -44,9 +47,9 @@ export class RideProvider {
         // Check speed
         if (pos.speed) {
           // Set current speed
-          this.currentSpeed = pos.speed;
+          this.currentSpeed = pos.speed * 2.23694; // Convert meters/second to miles/hour
           // Calculate average speed
-          this.calculateAvgSpeed(pos.speed);
+          this.calculateAvgSpeed(this.currentSpeed);
         }
         // Calculate distance
         if (this.lastCoord.lat && this.lastCoord.lng) {
@@ -100,10 +103,16 @@ export class RideProvider {
     this.saveRide();
   }
   
-  saveRide(): void {
-    
-    // Save ride locally
-    this.saveLocal();
+  saveRide(): Promise<any> {
+    return this.http.post(this.apiUrl, this.ride)
+      .toPromise()
+      .then((response) => {
+        // Update ride object with _id from api
+        this.ride = response.json().data as RideModel;
+        // Save ride locally
+        this.saveLocal();
+      })
+      .catch(err => console.log(err));
   }
   
   saveLocal(): Promise<RideModel[]> {
