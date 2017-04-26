@@ -14,7 +14,7 @@ import { LocationProvider } from '../../providers/location-provider';
 })
 export class HomeWeather implements OnInit {
   
-  weather: any;
+  weather: Object;
   
   constructor(
     public weatherProvider: WeatherProvider,
