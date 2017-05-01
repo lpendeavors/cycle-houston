@@ -108,7 +108,7 @@ export class RideProvider {
       .toPromise()
       .then((response) => {
         // Update ride object with _id from api
-        this.ride = response.json().data as RideModel;
+        this.ride = response.json() as RideModel;
         // Save ride locally
         this.saveLocal();
       })

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+/*import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { HomeWeather } from './home-weather';
@@ -46,4 +46,4 @@ describe('HomeWeather Component', () => {
     it('should load weather component after updating property', () => {
         
     });
-});
+});*/
