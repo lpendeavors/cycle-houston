@@ -1,5 +1,6 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
@@ -9,7 +10,6 @@ import { TabsModule } from '../pages/tabs/tabs.module';
 import { HomeModule } from '../pages/home/home.module';
 import { RideModule } from '../pages/ride/ride.module';
 import { ProfileModule } from '../pages/profile/profile.module';
-import { PipesModule } from '../pipes/pipes.module';
 
 import { ProfileProvider } from '../providers/profile-provider';
 import { WeatherProvider } from '../providers/weather-provider';
@@ -26,14 +26,14 @@ import { Geolocation } from '@ionic-native/geolocation';
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     HttpModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     TabsModule,
     HomeModule,
     RideModule,
-    ProfileModule,
-    PipesModule
+    ProfileModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -39,7 +39,7 @@ export class Ride {
       list.addInput({
         type: 'radio',
         label: type,
-        value: type.toLowerCase(),
+        value: type.toLowerCase()
       });
     });
     // Add buttons

@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
 import { Subject } from 'rxjs/Subject';
@@ -37,16 +37,17 @@ export class LocationProvider {
   
   startTracking(): void {
     // Background Tracking
-    let config = {
-      desiredAccuracy: 0,
+    const config: BackgroundGeolocationConfig = {
+      desiredAccuracy: 10,
       stationaryRadius: 1,
       distanceFilter: 1,
-      debug: true,
+      debug: true, // For development only
       
       // Android
+      notificationTitle: 'Cycle Houston',
+      notificationText: 'Your location is being tracked in the background',
       interval: 2000,
       locationProvider: 0,
-      fastestInterval: 200,
       stopOnStillActivity: false,
       
       // IOS
@@ -69,18 +70,19 @@ export class LocationProvider {
     // Foreground tracking
     let options = {
       frequency: 2000,
-      enableHighAccuracy: true
+      enableHighAccuracy: true,
+      maxAge: 0
     };
     
     this.watch = this.geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
       this.zone.run(() => {
         this.locationUpdate.next(position.coords);
-      })
+      });
     });
   }
   
   stopTracking(): void {
-    this.backgroundGeolocation.finish();
+    this.backgroundGeolocation.stop();
     this.watch.unsubscribe();
   }
   

@@ -27,9 +27,8 @@ export class ProfileProvider {
                 .post(this.apiUrl, profile)
                 .toPromise()
                 .then((response) => {
-                  response.json().data as ProfileModel;
                   // Save locally
-                  let prof = response.json().data;
+                  let prof = response.json() as ProfileModel;
                   this.saveLocal(prof);
                 })
                 .catch(this.handleError);

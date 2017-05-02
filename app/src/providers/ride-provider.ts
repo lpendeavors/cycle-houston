@@ -108,7 +108,8 @@ export class RideProvider {
       .toPromise()
       .then((response) => {
         // Update ride object with _id from api
-        this.ride = response.json() as RideModel;
+        let savedRide = response.json();
+        this.ride.id = savedRide._id;
         // Save ride locally
         this.saveLocal();
       })
@@ -153,7 +154,7 @@ export class RideProvider {
     // Add to total distance
     this.zone.run(() => {
       this.ride.distance += dist;
-    })
+    });
   }
   
   calculateAvgSpeed(newSpeed: number): void {

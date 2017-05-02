@@ -21,7 +21,7 @@
       <ion-grid>
         <ion-row>
           <ion-col><p text-right><strong>Duration:</strong></p></ion-col>
-          <ion-col><p>{{ride.duration}}</p></ion-col>
+          <ion-col><p>{{ride.duration | secondsToTime | date:'HH:mm:ss' }}</p></ion-col>
         </ion-row>
         <ion-row>
           <ion-col><p text-right><strong>Distance:</strong></p></ion-col>

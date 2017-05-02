@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Angular Pipes.
  */
 @Pipe({
-  name: 'secondsToTime',
+  name: 'secondsToTime'
 })
 export class SecondsToTime implements PipeTransform {
   /**

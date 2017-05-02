@@ -4,6 +4,7 @@ import { Ride } from './ride';
 
 import { RideMapModule } from '../../components/ride-map/ride-map.module';
 import { RideProvider } from '../../providers/ride-provider';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { RideProvider } from '../../providers/ride-provider';
   ],
   imports: [
     IonicPageModule.forChild(Ride),
-    RideMapModule
+    RideMapModule,
+    PipesModule
   ],
   providers: [
     RideProvider
