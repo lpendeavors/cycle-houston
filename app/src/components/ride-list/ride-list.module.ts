@@ -3,6 +3,7 @@ import { IonicModule } from 'ionic-angular';
 import { RideList } from './ride-list';
 import { RideDetailsModule } from '../ride-details/ride-details.module';
 import { RideProvider } from '../../providers/ride-provider';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { RideProvider } from '../../providers/ride-provider';
   ],
   imports: [
     IonicModule.forRoot(RideList),
-    RideDetailsModule
+    RideDetailsModule,
+    PipesModule
   ],
   providers: [
     RideProvider

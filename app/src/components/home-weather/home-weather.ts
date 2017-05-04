@@ -21,8 +21,6 @@ export class HomeWeather implements OnInit {
     public locationProvider: LocationProvider
   ) {}
   
-  
-  
   ngOnInit(): void {
     // Get current weather
     this.locationProvider.getPosition()

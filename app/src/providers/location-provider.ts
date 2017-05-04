@@ -39,14 +39,14 @@ export class LocationProvider {
     // Background Tracking
     const config: BackgroundGeolocationConfig = {
       desiredAccuracy: 10,
-      stationaryRadius: 1,
-      distanceFilter: 1,
-      debug: true, // For development only
+      stationaryRadius: 0,
+      distanceFilter: 0,
+      //debug: true, // For development only
       
       // Android
       notificationTitle: 'Cycle Houston',
       notificationText: 'Your location is being tracked in the background',
-      interval: 2000,
+      interval: 200,
       locationProvider: 0,
       stopOnStillActivity: false,
       
@@ -55,7 +55,7 @@ export class LocationProvider {
       pauseLocationUpdates: false
     };
     
-    this.backgroundGeolocation.configure(config).subscribe((location) => {
+    this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
       this.zone.run(() => {
         this.locationUpdate.next(location);
       });

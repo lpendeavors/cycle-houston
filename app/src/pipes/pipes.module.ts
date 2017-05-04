@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SecondsToTime } from './seconds-to-time';
+import { SortBy } from './sort-by';
 
 @NgModule({
     declarations: [
-        SecondsToTime
+        SecondsToTime,
+        SortBy
     ],
     imports: [
         CommonModule
     ],
     exports: [
-        SecondsToTime
+        SecondsToTime,
+        SortBy
     ]
 })
 export class PipesModule {}

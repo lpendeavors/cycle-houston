@@ -64,7 +64,9 @@ export class RideProvider {
     // Check for ride history
     this.storage.ready().then(() => {
       storage.get('rides').then(rides => {
-        if (rides) { this.rideHistory = rides; }
+        if (rides) { 
+          this.rideHistory = rides;
+        }
       });
     });
   }
