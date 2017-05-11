@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import { Platform } from 'ionic-angular';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 
@@ -19,6 +20,7 @@ export class LocationProvider {
   public speed: number;
 
   constructor(
+    public plt: Platform,
     public zone: NgZone,
     public geolocation: Geolocation, 
     public backgroundGeolocation: BackgroundGeolocation
@@ -26,12 +28,14 @@ export class LocationProvider {
   
   getPosition(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.geolocation.getCurrentPosition().then(pos => {
-        return resolve(pos);
-      },
-      (error) => {
-        reject(error.message || error);
-      });
+      this.plt.ready().then(() => {
+        this.geolocation.getCurrentPosition().then(pos => {
+          return resolve(pos);
+        },
+        (error) => {
+          reject(error.message || error);
+        });
+      })
     })
   }
   
